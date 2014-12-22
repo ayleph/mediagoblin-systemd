@@ -1,0 +1,22 @@
+[Unit]
+Description=Mediagoblin
+
+[Service]
+Type=forking
+User=mediagoblin
+Group=mediagoblin
+Environment=CELERY_ALWAYS_EAGER=false
+WorkingDirectory=/srv/mediagoblin/mediagoblin
+ExecStart=/srv/mediagoblin/mediagoblin/bin/paster serve \
+              /srv/mediagoblin/mediagoblin/paste_local.ini \
+              --pid-file=/var/run/mediagoblin/mediagoblin.pid \
+              --log-file=/var/log/mediagoblin/mediagoblin.log \
+              --daemon \
+              --server-name=fcgi fcgi_host=127.0.0.1 fcgi_port=26543
+ExecStop=/srv/mediagoblin/mediagoblin/bin/paster serve \
+             --pid-file=/var/run/mediagoblin/mediagoblin.pid \
+             /srv/mediagoblin/mediagoblin/paste_local.ini stop
+PIDFile=/var/run/mediagoblin/mediagoblin.pid
+
+[Install]
+WantedBy=multi-user.target
